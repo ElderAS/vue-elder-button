@@ -188,8 +188,8 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../node_modules/vue-elder-defaults/styles/variables';
-@import '../node_modules/vue-elder-defaults/styles/utils';
+@import '~node_modules/vue-elder-defaults/styles/variables';
+@import '~node_modules/vue-elder-defaults/styles/utils';
 
 .elder__button {
   display: inline-flex;
