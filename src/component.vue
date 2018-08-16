@@ -38,7 +38,6 @@ function clickAway(event) {
 }
 
 export default {
-  mixins: [FaMixin],
   name: 'button-component',
   props: {
     primary: Boolean,
