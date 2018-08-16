@@ -1,0 +1,42 @@
+{
+  "name": "vue-elder-button",
+  "version": "0.0.0-development",
+  "description": "Button component for vue-elder",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no tests yet\"",
+    "travis-deploy-once": "travis-deploy-once",
+    "semantic-release": "semantic-release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ElderAS/vue-elder-button.git"
+  },
+  "keywords": [
+    "vue",
+    "component",
+    "button"
+  ],
+  "author": "carsten@elder.no",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ElderAS/vue-elder-button/issues"
+  },
+  "homepage": "https://github.com/ElderAS/vue-elder-button#readme",
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.2",
+    "@fortawesome/free-solid-svg-icons": "^5.2.0",
+    "@fortawesome/vue-fontawesome": "^0.1.1",
+    "vue-elder-defaults": "^1.0.0"
+  },
+  "devDependencies": {
+    "cz-conventional-changelog": "^2.1.0",
+    "semantic-release": "^15.9.8",
+    "travis-deploy-once": "^5.0.2"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}
