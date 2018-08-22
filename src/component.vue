@@ -1,4 +1,4 @@
-<template>
+<template lang="html">
   <button :type="buttonType" class="elder__button" :class="classNames" @click="onClick($event)" :disabled="isDisabled" :style="{ pointerEvents: isBusy ? 'none' : undefined }">
     <template v-if="!onState">
       <div v-if="label">{{ label }}</div>
@@ -38,7 +38,6 @@ function clickAway(event) {
 }
 
 export default {
-  name: 'button-component',
   props: {
     primary: Boolean,
     secondary: Boolean,
@@ -203,7 +202,6 @@ export default {
   outline: none;
 
   padding: 1em 2em;
-  margin: 0;
   border-radius: $border-radius;
 
   white-space: nowrap;
