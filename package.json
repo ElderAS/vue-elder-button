@@ -4,7 +4,7 @@
   "description": "Button component for vue-elder",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no tests yet\"",
+    "test": "echo \"No tests yet\"",
     "travis-deploy-once": "travis-deploy-once",
     "semantic-release": "semantic-release",
     "prepare": "webpack"

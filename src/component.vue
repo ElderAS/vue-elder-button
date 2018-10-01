@@ -65,6 +65,11 @@ export default {
       default: 'Noe gikk galt',
     },
     icon: [String, Array],
+    iconPlacement: {
+      type: String,
+      default: 'right',
+      enum: ['left', 'right'],
+    },
     disabled: Boolean,
     loading: Boolean,
     promise: Promise,
@@ -113,6 +118,8 @@ export default {
         'elder__button--loading': this.isLoading,
         'elder__button--icon-only': !this.label,
         'elder__button--icon': this.icon && this.label,
+        'elder__button--icon-left': this.iconPlacement === 'left',
+        'elder__button--icon-right': this.iconPlacement === 'right',
       }
     },
   },
@@ -224,6 +231,10 @@ export default {
 
   &--icon {
     justify-content: between;
+
+    &-left {
+      flex-direction: row-reverse;
+    }
   }
 
   &--icon-only {
@@ -263,7 +274,12 @@ export default {
     background-color: rgba(black, 0.1);
     border-radius: 0 $border-radius $border-radius 0;
 
-    &:first-child {
+    &:first-child:last-child {
+      margin: -1em 2em -1em -2em;
+      border-radius: $border-radius 0 0 $border-radius;
+    }
+
+    .elder__button--icon-left & {
       margin: -1em 2em -1em -2em;
       border-radius: $border-radius 0 0 $border-radius;
     }
