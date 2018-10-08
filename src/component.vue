@@ -230,7 +230,7 @@ export default {
   }
 
   &--icon {
-    justify-content: between;
+    justify-content: space-between;
 
     &-left {
       flex-direction: row-reverse;
