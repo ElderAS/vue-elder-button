@@ -44,6 +44,10 @@ export default {
     error: Boolean,
     warning: Boolean,
     success: Boolean,
+    type: {
+      type: String,
+      default: 'submit',
+    },
     label: {
       type: String,
       default: 'Button',
@@ -100,7 +104,7 @@ export default {
     },
     buttonType() {
       if (this.confirm && !this.onConfirmState) return 'button'
-      return null
+      return this.type
     },
     onState() {
       return this.onSuccessState || this.onErrorState || this.onConfirmState || this.isLoading
