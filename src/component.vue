@@ -1,29 +1,29 @@
 <template lang="html">
-  <button :type="buttonType" class="elder__button" :class="classNames" @click="onClick($event)" :disabled="isDisabled" :style="{ pointerEvents: isBusy ? 'none' : undefined }">
+  <button :type="buttonType" class="elder-button" :class="classNames" @click="onClick($event)" :disabled="isDisabled" :style="{ pointerEvents: isBusy ? 'none' : undefined }">
     <template v-if="!onState">
       <div v-if="label">{{ label }}</div>
-      <div class="elder__button__icon" v-if="icon && label">
-        <fa :icon="icon" />
+      <div class="elder-button__icon" v-if="icon && label">
+        <font-awesome-icon :icon="icon" />
       </div>
-      <fa :icon="icon" v-if="icon && !label"/>
+      <font-awesome-icon :icon="icon" v-if="icon && !label"/>
     </template>
     <template v-if="isLoading">{{ loadingLabel }}</template>
     <template v-if="onSuccessState">
       <div>{{ successLabel }}</div>
-      <div class="elder__button__icon">
-        <fa :icon="['fas', 'check']" />
+      <div class="elder-button__icon">
+        <font-awesome-icon :icon="['fas', 'check']" />
       </div>
     </template>
     <template v-if="onConfirmState">
       <div>{{ confirmLabel }}</div>
-      <div class="elder__button__icon">
-        <fa :icon="['fas', 'exclamation-triangle']" />
+      <div class="elder-button__icon">
+        <font-awesome-icon :icon="['fas', 'exclamation-triangle']" />
       </div>
     </template>
     <template v-if="onErrorState">
       <div>{{ errorLabel }}</div>
-      <div class="elder__button__icon">
-        <fa :icon="['fas', 'times']" />
+      <div class="elder-button__icon">
+        <font-awesome-icon :icon="['fas', 'times']" />
       </div>
     </template>
   </button>
@@ -31,7 +31,7 @@
 
 <script>
 import './icons'
-import { FontAwesomeIcon as Fa } from '@fortawesome/vue-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 function clickAway(event) {
   if (!this.$el.contains(event.target)) this.onConfirmState = false
@@ -114,16 +114,16 @@ export default {
     },
     classNames() {
       return {
-        'elder__button--primary': this.primary && !this.onState,
-        'elder__button--secondary': this.secondary && !this.onState,
-        'elder__button--warning': this.warning || this.onConfirmState,
-        'elder__button--error': this.onErrorState || (this.error && !this.onState),
-        'elder__button--success': this.onSuccessState || (this.success && !this.onState),
-        'elder__button--loading': this.isLoading,
-        'elder__button--icon-only': !this.label,
-        'elder__button--icon': this.icon && this.label,
-        'elder__button--icon-left': this.iconPlacement === 'left',
-        'elder__button--icon-right': this.iconPlacement === 'right',
+        'elder-button--primary': this.primary && !this.onState,
+        'elder-button--secondary': this.secondary && !this.onState,
+        'elder-button--warning': this.warning || this.onConfirmState,
+        'elder-button--error': this.onErrorState || (this.error && !this.onState),
+        'elder-button--success': this.onSuccessState || (this.success && !this.onState),
+        'elder-button--loading': this.isLoading,
+        'elder-button--icon-only': !this.label,
+        'elder-button--icon': this.icon && this.label,
+        'elder-button--icon-left': this.iconPlacement === 'left',
+        'elder-button--icon-right': this.iconPlacement === 'right',
       }
     },
   },
@@ -191,7 +191,7 @@ export default {
     )
   },
   components: {
-    Fa,
+    FontAwesomeIcon,
   },
 }
 </script>
@@ -200,7 +200,7 @@ export default {
 @import '~node_modules/vue-elder-defaults/styles/variables';
 @import '~node_modules/vue-elder-defaults/styles/utils';
 
-.elder__button {
+.elder-button {
   display: inline-flex;
   justify-content: center;
   align-items: center;
@@ -238,6 +238,11 @@ export default {
 
     &-left {
       flex-direction: row-reverse;
+
+      .elder-button__icon {
+        margin: -1em 2em -1em -2em;
+        border-radius: $border-radius 0 0 $border-radius;
+      }
     }
   }
 
@@ -279,11 +284,6 @@ export default {
     border-radius: 0 $border-radius $border-radius 0;
 
     &:first-child:last-child {
-      margin: -1em 2em -1em -2em;
-      border-radius: $border-radius 0 0 $border-radius;
-    }
-
-    .elder__button--icon-left & {
       margin: -1em 2em -1em -2em;
       border-radius: $border-radius 0 0 $border-radius;
     }
