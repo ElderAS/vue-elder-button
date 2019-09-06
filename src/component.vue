@@ -219,7 +219,7 @@ $px: 1.5em;
   cursor: pointer;
 
   font: inherit;
-  border: 1px solid $border-color;
+  border: 1px solid rgba(black, 0.1);
   outline: none;
 
   border-radius: $border-radius;
