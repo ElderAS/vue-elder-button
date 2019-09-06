@@ -82,7 +82,7 @@ export default {
   },
   computed: {
     themeComp() {
-      if (!this.onState) return theme;
+      if (!this.onState) return this.theme;
       return this.state || "default";
     },
     labelComp() {
