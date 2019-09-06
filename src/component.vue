@@ -1,5 +1,5 @@
 <template lang="html">
-  <component :is="tag" :type="buttonType" class="elder-button" :class="classNames" @click="onClick($event)" :disabled="isDisabled" :style="{ pointerEvents: isBusy ? 'none' : undefined }">
+  <component :is="tag" :type="buttonType" class="elder-button" :class="classNames" @click="onClick($event)" :disabled="isDisabled" v-bind="$attrs">
     <div v-if="labelComp" class="elder-button__label">{{ labelComp }}</div>
     <div v-if="iconComp" class="elder-button__icon">
       <font-awesome-icon :icon="iconComp"/>
@@ -116,6 +116,7 @@ export default {
         "elder-button--" + this.themeComp,
         {
           "elder-button--loading": this.isLoading,
+          "elder-button--busy": this.isBusy,
           "elder-button--icon-only": !this.label,
           "elder-button--icon": this.icon && this.label,
           "elder-button--icon-left": this.icon && this.iconPlacement === "left",
@@ -239,6 +240,10 @@ $px: 1.5em;
 
   &--icon-only {
     height: 3em;
+  }
+
+  &--busy {
+    pointer-events: none !important;
   }
 
   &--loading {
