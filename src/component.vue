@@ -12,7 +12,7 @@ import "./icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 function clickAway(event) {
-  if (!this.$el.contains(event.target)) this.onConfirmState = false;
+  if (!this.$el.contains(event.target)) this.resetState();
 }
 
 let defaults = {
@@ -20,6 +20,12 @@ let defaults = {
   successLabel: "Completed",
   confirmLabel: "Are you sure?",
   errorLabel: "Something went wrong"
+};
+
+let stateIconMap = {
+  success: "check",
+  confirm: "exclamation-triangle",
+  error: "times"
 };
 
 export default {
@@ -67,67 +73,56 @@ export default {
   },
   data() {
     return {
-      onSuccessState: false,
-      onErrorState: false,
-      onLoadingState: false,
+      state: null,
       innerPromise: null,
       stateTimer: null,
       loadingTreshhold: null,
-      onConfirmState: false,
       clickAway: null
     };
   },
   computed: {
+    themeComp() {
+      if (!this.onState) return theme;
+      return this.state || "default";
+    },
     labelComp() {
       if (!this.onState) return this.label;
       if (this.isLoading) return this.loadingLabel;
-      if (this.onSuccessState) return this.successLabel;
-      if (this.onConfirmState) return this.confirmLabel;
-      if (this.onErrorState) return this.errorLabel;
+      return this[this.state + "Label"];
     },
     iconComp() {
       if (!this.onState) return this.icon;
       if (this.isLoading) return;
-      if (this.onSuccessState) return ["fas", "check"];
-      if (this.onConfirmState) return ["fas", "exclamation-triangle"];
-      if (this.onErrorState) return ["fas", "times"];
+      return ["fas", stateIconMap[this.state]];
     },
     isDisabled() {
       return this.disabled || this.isLoading;
     },
     isLoading() {
-      return this.onLoadingState || this.loading;
+      return this.state === "loading" || this.loading;
     },
     buttonType() {
-      if (this.confirm && !this.onConfirmState) return "button";
+      if (this.confirm && this.state !== "confirm") return "button";
       return this.type;
     },
     onState() {
-      return (
-        this.onSuccessState ||
-        this.onErrorState ||
-        this.onConfirmState ||
-        this.isLoading
-      );
+      return this.state || this.isLoading;
     },
     isBusy() {
-      return this.onSuccessState || this.onErrorState || this.isLoading;
+      return ["success", "error"].includes(this.state) || this.isLoading;
     },
     classNames() {
-      return {
-        "elder-button--primary": this.primary && !this.onState,
-        "elder-button--secondary": this.secondary && !this.onState,
-        "elder-button--warning": this.warning || this.onConfirmState,
-        "elder-button--error":
-          this.onErrorState || (this.error && !this.onState),
-        "elder-button--success":
-          this.onSuccessState || (this.success && !this.onState),
-        "elder-button--loading": this.isLoading,
-        "elder-button--icon-only": !this.label,
-        "elder-button--icon": this.icon && this.label,
-        "elder-button--icon-left": this.icon && this.iconPlacement === "left",
-        "elder-button--icon-right": this.icon && this.iconPlacement === "right"
-      };
+      return [
+        "elder-button--" + this.themeComp,
+        {
+          "elder-button--loading": this.isLoading,
+          "elder-button--icon-only": !this.label,
+          "elder-button--icon": this.icon && this.label,
+          "elder-button--icon-left": this.icon && this.iconPlacement === "left",
+          "elder-button--icon-right":
+            this.icon && this.iconPlacement === "right"
+        }
+      ];
     }
   },
   methods: {
@@ -136,47 +131,35 @@ export default {
       this.resetState();
       this.innerPromise = promise;
 
-      this.loadingTreshhold = setTimeout(
-        () => (this.onLoadingState = true),
-        100
-      );
+      this.loadingTreshhold = setTimeout(() => (this.state = "loading"), 100);
+
+      let capitalize = val => val.charAt(0).toUpperCase() + val.substring(1);
+      let initStateTimeout = state => {
+        this.resetState();
+        if (this.stateTimeout) {
+          this.state = state;
+          this.stateTimer = setTimeout(() => {
+            this.resetState();
+            this.$emit("on" + capitalize(state));
+          }, this.stateTimeout);
+        } else this.$emit("on" + capitalize(state));
+      };
 
       this.innerPromise
-        .then(() => {
-          this.resetState();
-          if (this.stateTimeout) {
-            this.onSuccessState = true;
-            this.stateTimer = setTimeout(() => {
-              this.onSuccessState = false;
-              this.$emit("onSuccess");
-            }, this.stateTimeout);
-          } else this.$emit("onSuccess");
-        })
-        .catch(() => {
-          this.resetState();
-          this.onErrorState = true;
-          if (this.stateTimeout) {
-            this.stateTimer = setTimeout(() => {
-              this.onErrorState = false;
-              this.$emit("onError");
-            }, this.stateTimeout);
-          } else this.$emit("onError");
-        });
+        .then(() => initStateTimeout("success"))
+        .catch(() => initStateTimeout("error"));
     },
     resetState() {
       if (this.loadingTreshhold) clearTimeout(this.loadingTreshhold);
       if (this.stateTimer) clearTimeout(this.stateTimer);
       this.innerPromise = null;
-      this.onLoadingState = false;
-      this.onSuccessState = false;
-      this.onErrorState = false;
-      this.onConfirmState = false;
+      this.state = null;
     },
     onClick(e) {
-      if (this.confirm && !this.onConfirmState) {
+      if (this.confirm && !this.state === "confirm") {
         this.clickAway = clickAway.bind(this);
         window.addEventListener("click", this.clickAway);
-        return (this.onConfirmState = true);
+        return (this.state = "confirm");
       }
       if (this.clickAway) {
         window.removeEventListener("click", this.clickAway);
