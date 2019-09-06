@@ -1,87 +1,69 @@
 <template lang="html">
-  <button :type="buttonType" class="elder-button" :class="classNames" @click="onClick($event)" :disabled="isDisabled" :style="{ pointerEvents: isBusy ? 'none' : undefined }">
-    <template v-if="!onState">
-      <div v-if="label">{{ label }}</div>
-      <div class="elder-button__icon" v-if="icon && label">
-        <font-awesome-icon :icon="icon" />
-      </div>
-      <font-awesome-icon :icon="icon" v-if="icon && !label"/>
-    </template>
-    <template v-if="isLoading">{{ loadingLabel }}</template>
-    <template v-if="onSuccessState">
-      <div>{{ successLabel }}</div>
-      <div class="elder-button__icon">
-        <font-awesome-icon :icon="['fas', 'check']" />
-      </div>
-    </template>
-    <template v-if="onConfirmState">
-      <div>{{ confirmLabel }}</div>
-      <div class="elder-button__icon">
-        <font-awesome-icon :icon="['fas', 'exclamation-triangle']" />
-      </div>
-    </template>
-    <template v-if="onErrorState">
-      <div>{{ errorLabel }}</div>
-      <div class="elder-button__icon">
-        <font-awesome-icon :icon="['fas', 'times']" />
-      </div>
-    </template>
-  </button>
+  <component :is="tag" :type="buttonType" class="elder-button" :class="classNames" @click="onClick($event)" :disabled="isDisabled" :style="{ pointerEvents: isBusy ? 'none' : undefined }">
+    <div v-if="labelComp" class="elder-button__label">{{ labelComp }}</div>
+    <div v-if="iconComp" class="elder-button__icon">
+      <font-awesome-icon :icon="iconComp"/>
+    </div>
+  </component>
 </template>
 
 <script>
-import './icons'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import "./icons";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 function clickAway(event) {
-  if (!this.$el.contains(event.target)) this.onConfirmState = false
+  if (!this.$el.contains(event.target)) this.onConfirmState = false;
 }
+
+let defaults = {
+  loadingLabel: "Loading...",
+  successLabel: "Completed",
+  confirmLabel: "Are you sure?",
+  errorLabel: "Something went wrong"
+};
 
 export default {
   props: {
-    primary: Boolean,
-    secondary: Boolean,
-    error: Boolean,
-    warning: Boolean,
-    success: Boolean,
-    type: {
+    tag: {
       type: String,
-      default: 'submit',
+      default: "button"
     },
-    label: {
+    theme: {
       type: String,
-      default: 'Button',
+      enum: ["default", "primary", "secondary", "warning", "error", "success"],
+      default: "default"
     },
+    label: String,
     loadingLabel: {
       type: String,
-      default: 'Lagrer...',
+      default: defaults.loadingLabel
     },
     confirmLabel: {
       type: String,
-      default: 'Er du sikker?',
+      default: defaults.confirmLabel
     },
     successLabel: {
       type: String,
-      default: 'Fullført',
+      default: defaults.successLabel
     },
     errorLabel: {
       type: String,
-      default: 'Noe gikk galt',
+      default: defaults.errorLabel
     },
     icon: [String, Array],
     iconPlacement: {
       type: String,
-      default: 'right',
-      enum: ['left', 'right'],
+      default: "right",
+      enum: ["left", "right"]
     },
     disabled: Boolean,
     loading: Boolean,
     promise: Promise,
     stateTimeout: {
       type: Number,
-      default: 1000,
+      default: 1000
     },
-    confirm: Boolean,
+    confirm: Boolean
   },
   data() {
     return {
@@ -92,127 +74,154 @@ export default {
       stateTimer: null,
       loadingTreshhold: null,
       onConfirmState: false,
-      clickAway: null,
-    }
+      clickAway: null
+    };
   },
   computed: {
+    labelComp() {
+      if (!this.onState) return this.label;
+      if (this.isLoading) return this.loadingLabel;
+      if (this.onSuccessState) return this.successLabel;
+      if (this.onConfirmState) return this.confirmLabel;
+      if (this.onErrorState) return this.errorLabel;
+    },
+    iconComp() {
+      if (!this.onState) return this.icon;
+      if (this.isLoading) return;
+      if (this.onSuccessState) return ["fas", "check"];
+      if (this.onConfirmState) return ["fas", "exclamation-triangle"];
+      if (this.onErrorState) return ["fas", "times"];
+    },
     isDisabled() {
-      return this.disabled || this.isLoading
+      return this.disabled || this.isLoading;
     },
     isLoading() {
-      return this.onLoadingState || this.loading
+      return this.onLoadingState || this.loading;
     },
     buttonType() {
-      if (this.confirm && !this.onConfirmState) return 'button'
-      return this.type
+      if (this.confirm && !this.onConfirmState) return "button";
+      return this.type;
     },
     onState() {
-      return this.onSuccessState || this.onErrorState || this.onConfirmState || this.isLoading
+      return (
+        this.onSuccessState ||
+        this.onErrorState ||
+        this.onConfirmState ||
+        this.isLoading
+      );
     },
     isBusy() {
-      return this.onSuccessState || this.onErrorState || this.isLoading
+      return this.onSuccessState || this.onErrorState || this.isLoading;
     },
     classNames() {
       return {
-        'elder-button--primary': this.primary && !this.onState,
-        'elder-button--secondary': this.secondary && !this.onState,
-        'elder-button--warning': this.warning || this.onConfirmState,
-        'elder-button--error': this.onErrorState || (this.error && !this.onState),
-        'elder-button--success': this.onSuccessState || (this.success && !this.onState),
-        'elder-button--loading': this.isLoading,
-        'elder-button--icon-only': !this.label,
-        'elder-button--icon': this.icon && this.label,
-        'elder-button--icon-left': this.iconPlacement === 'left',
-        'elder-button--icon-right': this.iconPlacement === 'right',
-      }
-    },
+        "elder-button--primary": this.primary && !this.onState,
+        "elder-button--secondary": this.secondary && !this.onState,
+        "elder-button--warning": this.warning || this.onConfirmState,
+        "elder-button--error":
+          this.onErrorState || (this.error && !this.onState),
+        "elder-button--success":
+          this.onSuccessState || (this.success && !this.onState),
+        "elder-button--loading": this.isLoading,
+        "elder-button--icon-only": !this.label,
+        "elder-button--icon": this.icon && this.label,
+        "elder-button--icon-left": this.icon && this.iconPlacement === "left",
+        "elder-button--icon-right": this.icon && this.iconPlacement === "right"
+      };
+    }
   },
   methods: {
     hookPromise(promise) {
-      if (!promise) return
-      this.resetState()
-      this.innerPromise = promise
+      if (!promise) return;
+      this.resetState();
+      this.innerPromise = promise;
 
-      this.loadingTreshhold = setTimeout(() => (this.onLoadingState = true), 100)
+      this.loadingTreshhold = setTimeout(
+        () => (this.onLoadingState = true),
+        100
+      );
 
       this.innerPromise
         .then(() => {
-          this.resetState()
+          this.resetState();
           if (this.stateTimeout) {
-            this.onSuccessState = true
+            this.onSuccessState = true;
             this.stateTimer = setTimeout(() => {
-              this.onSuccessState = false
-              this.$emit('onSuccess')
-            }, this.stateTimeout)
-          } else this.$emit('onSuccess')
+              this.onSuccessState = false;
+              this.$emit("onSuccess");
+            }, this.stateTimeout);
+          } else this.$emit("onSuccess");
         })
         .catch(() => {
-          this.resetState()
-          this.onErrorState = true
+          this.resetState();
+          this.onErrorState = true;
           if (this.stateTimeout) {
             this.stateTimer = setTimeout(() => {
-              this.onErrorState = false
-              this.$emit('onError')
-            }, this.stateTimeout)
-          } else this.$emit('onError')
-        })
+              this.onErrorState = false;
+              this.$emit("onError");
+            }, this.stateTimeout);
+          } else this.$emit("onError");
+        });
     },
     resetState() {
-      if (this.loadingTreshhold) clearTimeout(this.loadingTreshhold)
-      if (this.stateTimer) clearTimeout(this.stateTimer)
-      this.innerPromise = null
-      this.onLoadingState = false
-      this.onSuccessState = false
-      this.onErrorState = false
-      this.onConfirmState = false
+      if (this.loadingTreshhold) clearTimeout(this.loadingTreshhold);
+      if (this.stateTimer) clearTimeout(this.stateTimer);
+      this.innerPromise = null;
+      this.onLoadingState = false;
+      this.onSuccessState = false;
+      this.onErrorState = false;
+      this.onConfirmState = false;
     },
     onClick(e) {
       if (this.confirm && !this.onConfirmState) {
-        this.clickAway = clickAway.bind(this)
-        window.addEventListener('click', this.clickAway)
-        return (this.onConfirmState = true)
+        this.clickAway = clickAway.bind(this);
+        window.addEventListener("click", this.clickAway);
+        return (this.onConfirmState = true);
       }
       if (this.clickAway) {
-        window.removeEventListener('click', this.clickAway)
-        this.clickAway = null
+        window.removeEventListener("click", this.clickAway);
+        this.clickAway = null;
       }
-      this.resetState()
-      this.$emit('click', e)
-    },
+      this.resetState();
+      this.$emit("click", e);
+    }
   },
   created() {
     this.$watch(
       function() {
-        return this.promise
+        return this.promise;
       },
       function(newValue, oldValue) {
-        if (newValue instanceof Promise) this.hookPromise(newValue)
-      },
-    )
+        if (newValue instanceof Promise) this.hookPromise(newValue);
+      }
+    );
   },
   components: {
-    FontAwesomeIcon,
-  },
-}
+    FontAwesomeIcon
+  }
+};
 </script>
 
 <style lang="scss">
-@import '~node_modules/vue-elder-defaults/styles/variables';
-@import '~node_modules/vue-elder-defaults/styles/utils';
+@import "~node_modules/vue-elder-defaults/styles/variables";
+@import "~node_modules/vue-elder-defaults/styles/utils";
+
+$py: 0.75em;
+$px: 1.5em;
 
 .elder-button {
   display: inline-flex;
   justify-content: center;
   align-items: center;
+  text-decoration: none;
 
   position: relative;
   cursor: pointer;
 
   font: inherit;
-  border: 1px solid #ccc;
+  border: 1px solid $border-color;
   outline: none;
 
-  padding: 1em 2em;
   border-radius: $border-radius;
 
   white-space: nowrap;
@@ -240,16 +249,13 @@ export default {
       flex-direction: row-reverse;
 
       .elder-button__icon {
-        margin: -1em 2em -1em -2em;
         border-radius: $border-radius 0 0 $border-radius;
       }
     }
   }
 
   &--icon-only {
-    padding: 0;
-    width: 2em;
-    height: 2em;
+    height: 3em;
   }
 
   &--loading {
@@ -257,7 +263,7 @@ export default {
     overflow: hidden;
 
     &:after {
-      content: '';
+      content: "";
       display: inline-block;
       width: 25%;
       height: 5px;
@@ -277,15 +283,32 @@ export default {
     }
   }
 
+  &__label {
+    padding: $py $px $py $px;
+
+    .elder-button--icon-right & {
+      padding: $py $px/2 $py $px;
+    }
+
+    .elder-button--icon-left & {
+      padding: $py $px $py $px/2;
+    }
+  }
+
   &__icon {
-    margin: -1em -2em -1em 2em;
-    padding: 1em 1.25em;
-    background-color: rgba(black, 0.1);
     border-radius: 0 $border-radius $border-radius 0;
 
     &:first-child:last-child {
-      margin: -1em 2em -1em -2em;
       border-radius: $border-radius 0 0 $border-radius;
+      padding: 0 $px;
+    }
+
+    .elder-button--icon-right & {
+      padding: $py $px $py 0;
+    }
+
+    .elder-button--icon-left & {
+      padding: $py 0 $py $px;
     }
   }
 
