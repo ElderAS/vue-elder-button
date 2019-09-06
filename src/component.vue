@@ -1,5 +1,5 @@
 <template lang="html">
-  <component :is="tag" :type="buttonType" class="elder-button" :class="classNames" @click="onClick($event)" :disabled="isDisabled" v-bind="$attrs">
+  <component :is="tag" :type="buttonType" class="elder-button" :class="classNames" @click="onClick" :disabled="isDisabled" v-bind="$attrs">
     <div v-if="labelComp" class="elder-button__label">{{ labelComp }}</div>
     <div v-if="iconComp" class="elder-button__icon">
       <font-awesome-icon :icon="iconComp"/>
@@ -83,6 +83,7 @@ export default {
   computed: {
     themeComp() {
       if (!this.onState) return this.theme;
+      if (this.state === "confirm") return "warning";
       return this.state || "default";
     },
     labelComp() {
@@ -156,8 +157,8 @@ export default {
       this.innerPromise = null;
       this.state = null;
     },
-    onClick(e) {
-      if (this.confirm && !this.state === "confirm") {
+    onClick(event) {
+      if (this.confirm && this.state !== "confirm") {
         this.clickAway = clickAway.bind(this);
         window.addEventListener("click", this.clickAway);
         return (this.state = "confirm");
@@ -167,7 +168,7 @@ export default {
         this.clickAway = null;
       }
       this.resetState();
-      this.$emit("click", e);
+      this.$emit("click", event);
     }
   },
   created() {
