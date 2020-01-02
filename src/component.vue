@@ -2,7 +2,7 @@
   <component :is="tag" :type="buttonType" class="elder-button" :class="classNames" @click="onClick" :disabled="isDisabled" v-bind="$attrs">
     <div v-if="labelComp" class="elder-button__label">{{ labelComp }}</div>
     <div v-if="iconComp" class="elder-button__icon">
-      <font-awesome-icon :icon="iconComp"/>
+      <font-awesome-icon v-bind="iconComp" />
     </div>
   </component>
 </template>
@@ -56,7 +56,7 @@ export default {
       type: String,
       default: defaults.errorLabel
     },
-    icon: [String, Array],
+    icon: [String, Array, Object],
     iconPlacement: {
       type: String,
       default: "right",
@@ -92,9 +92,11 @@ export default {
       return this[this.state + "Label"];
     },
     iconComp() {
-      if (!this.onState) return this.icon;
       if (this.isLoading) return;
-      return ["fas", stateIconMap[this.state]];
+      let icon = this.onState ? ["fas", stateIconMap[this.state]] : this.icon;
+
+      if (icon instanceof Array || typeof icon === "string") return { icon };
+      return icon;
     },
     isDisabled() {
       return this.disabled || this.isLoading;

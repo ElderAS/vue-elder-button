@@ -24,9 +24,9 @@
   },
   "homepage": "https://github.com/ElderAS/vue-elder-button#readme",
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.2",
+    "@fortawesome/fontawesome-svg-core": "^1.2.26",
     "@fortawesome/free-solid-svg-icons": "^5.2.0",
-    "@fortawesome/vue-fontawesome": "^0.1.6",
+    "@fortawesome/vue-fontawesome": "^0.1.9",
     "vue-elder-defaults": "^1.0.0"
   },
   "devDependencies": {
