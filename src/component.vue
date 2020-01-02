@@ -239,10 +239,6 @@ $px: 1.5em;
     }
   }
 
-  &--icon-only {
-    height: 3em;
-  }
-
   &--busy {
     pointer-events: none !important;
   }
