@@ -124,7 +124,8 @@ export default {
           "elder-button--icon": this.icon && this.label,
           "elder-button--icon-left": this.icon && this.iconPlacement === "left",
           "elder-button--icon-right":
-            this.icon && this.iconPlacement === "right"
+            (this.icon && this.iconPlacement === "right") ||
+            this.state === "confirm"
         }
       ];
     }
