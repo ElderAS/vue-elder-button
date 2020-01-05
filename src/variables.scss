@@ -1,0 +1,32 @@
+//Colors
+$primary: #3a9acd !default;
+$primary-contrast: #ffffff !default;
+$secondary: #ff773f !default;
+$secondary-contrast: #ffffff !default;
+$warning: #ff773f !default;
+$warning-contrast: #ffffff !default;
+$success: #33ca62 !default;
+$success-contrast: #ffffff !default;
+$error: #e83b35 !default;
+$error-contrast: #ffffff !default;
+
+$text-color: #444 !default;
+$text-color-contrast: #ffffff !default;
+
+$border-radius: 3px !default;
+
+$states: (
+  ("primary", $primary, $primary-contrast),
+  ("secondary", $secondary, $secondary-contrast),
+  ("warning", $warning, $warning-contrast),
+  ("success", $success, $success-contrast),
+  ("error", $error, $error-contrast)
+);
+
+@function guess-color($color) {
+  @if (lightness($color) > 65) {
+    @return $text-color;
+  } @else {
+    @return $text-color-contrast;
+  }
+}

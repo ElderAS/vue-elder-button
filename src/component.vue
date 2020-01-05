@@ -191,13 +191,12 @@ export default {
 </script>
 
 <style lang="scss">
-@import "~node_modules/vue-elder-defaults/styles/variables";
-@import "~node_modules/vue-elder-defaults/styles/utils";
-
-$py: 0.75em;
-$px: 1.5em;
-
 .elder-button {
+  @import "./variables";
+
+  $py: 0.75em;
+  $px: 1.5em;
+
   display: inline-flex;
   justify-content: center;
   align-items: center;
