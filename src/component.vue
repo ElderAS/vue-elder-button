@@ -1,6 +1,8 @@
 <template lang="html">
   <component :is="tag" :type="buttonType" class="elder-button" :class="classNames" @click="onClick" :disabled="isDisabled" v-bind="$attrs">
-    <div v-if="labelComp" class="elder-button__label">{{ labelComp }}</div>
+    <div v-if="labelComp" class="elder-button__label">
+      <slot>{{ labelComp }}</slot>
+    </div>
     <div v-if="iconComp" class="elder-button__icon">
       <font-awesome-icon v-bind="iconComp" />
     </div>
@@ -64,6 +66,7 @@ export default {
     },
     disabled: Boolean,
     loading: Boolean,
+    loadingOnClick: Boolean,
     promise: Promise,
     stateTimeout: {
       type: Number,
@@ -172,6 +175,8 @@ export default {
       }
       this.resetState();
       this.$emit("click", event);
+
+      if (this.loadingOnClick) this.state = "loading";
     }
   },
   created() {
