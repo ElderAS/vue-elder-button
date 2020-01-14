@@ -4,7 +4,7 @@
     :type="buttonType"
     class="elder-button"
     :class="classNames"
-    @click="onClick"
+    @click.native="onClick"
     :disabled="isDisabled"
     v-bind="$attrs"
   >
