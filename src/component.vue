@@ -1,7 +1,15 @@
 <template lang="html">
-  <component :is="tag" :type="buttonType" class="elder-button" :class="classNames" @click="onClick" :disabled="isDisabled" v-bind="$attrs">
+  <component
+    :is="tag"
+    :type="buttonType"
+    class="elder-button"
+    :class="classNames"
+    @click="onClick"
+    :disabled="isDisabled"
+    v-bind="$attrs"
+  >
     <div v-if="labelComp" class="elder-button__label">
-      <slot>{{ labelComp }}</slot>
+      {{ labelComp }}
     </div>
     <div v-if="iconComp" class="elder-button__icon">
       <font-awesome-icon v-bind="iconComp" />
@@ -10,59 +18,40 @@
 </template>
 
 <script>
-import "./icons";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { Options } from '../index'
+import { iconBinding } from './utils'
+import './icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 function clickAway(event) {
-  if (!this.$el.contains(event.target)) this.resetState();
+  if (!this.$el.contains(event.target)) this.resetState()
 }
-
-let defaults = {
-  loadingLabel: "Loading...",
-  successLabel: "Completed",
-  confirmLabel: "Are you sure?",
-  errorLabel: "Something went wrong"
-};
-
-let stateIconMap = {
-  success: "check",
-  confirm: "exclamation-triangle",
-  error: "times"
-};
 
 export default {
   props: {
     tag: {
       type: String,
-      default: "button"
+      default: 'button',
     },
     theme: {
       type: String,
-      enum: ["default", "primary", "secondary", "warning", "error", "success"],
-      default: "default"
+      enum: ['default', 'primary', 'secondary', 'warning', 'error', 'success'],
+      default: 'default',
     },
     label: String,
-    loadingLabel: {
-      type: String,
-      default: defaults.loadingLabel
+    labels: {
+      type: Object,
+      default: () => ({}),
     },
-    confirmLabel: {
-      type: String,
-      default: defaults.confirmLabel
-    },
-    successLabel: {
-      type: String,
-      default: defaults.successLabel
-    },
-    errorLabel: {
-      type: String,
-      default: defaults.errorLabel
+    icons: {
+      type: Object,
+      default: () => ({}),
     },
     icon: [String, Array, Object],
     iconPlacement: {
       type: String,
-      default: "right",
-      enum: ["left", "right"]
+      default: 'right',
+      enum: ['left', 'right'],
     },
     disabled: Boolean,
     loading: Boolean,
@@ -70,9 +59,9 @@ export default {
     promise: Promise,
     stateTimeout: {
       type: Number,
-      default: 1000
+      default: 1000,
     },
-    confirm: Boolean
+    confirm: Boolean,
   },
   data() {
     return {
@@ -80,124 +69,117 @@ export default {
       innerPromise: null,
       stateTimer: null,
       loadingTreshhold: null,
-      clickAway: null
-    };
+      clickAway: null,
+    }
   },
   computed: {
     themeComp() {
-      if (!this.onState) return this.theme;
-      if (this.state === "confirm") return "warning";
-      return this.state || "default";
+      if (!this.onState) return this.theme
+      if (this.state === 'confirm') return 'warning'
+      return this.state || 'default'
     },
     labelComp() {
-      if (!this.onState) return this.label;
-      if (this.isLoading) return this.loadingLabel;
-      return this[this.state + "Label"];
+      if (!this.onState) return this.label
+      if (this.isLoading) return this.labels.loading || this.$attrs.loadingLabel || Options.labels.loading
+      return this.labels[this.state] || this.$attrs[this.state + 'Label'] || Options.labels[this.state]
     },
     iconComp() {
-      if (this.isLoading) return;
-      let icon = this.onState ? ["fas", stateIconMap[this.state]] : this.icon;
-
-      if (icon instanceof Array || typeof icon === "string") return { icon };
-      return icon;
+      if (this.isLoading) return
+      return iconBinding(this.onState ? this.icons[this.state] || Options.icons[this.state] : this.icon)
     },
     isDisabled() {
-      return this.disabled || this.isLoading;
+      return this.disabled || this.isLoading
     },
     isLoading() {
-      return this.state === "loading" || this.loading;
+      return this.state === 'loading' || this.loading
     },
     buttonType() {
-      if (this.confirm && this.state !== "confirm") return "button";
-      return this.type;
+      if (this.confirm && this.state !== 'confirm') return 'button'
+      return this.type
     },
     onState() {
-      return this.state || this.isLoading;
+      return this.state || this.isLoading
     },
     isBusy() {
-      return ["success", "error"].includes(this.state) || this.isLoading;
+      return ['success', 'error'].includes(this.state) || this.isLoading
     },
     classNames() {
       return [
-        "elder-button--" + this.themeComp,
+        'elder-button--' + this.themeComp,
         {
-          "elder-button--loading": this.isLoading,
-          "elder-button--busy": this.isBusy,
-          "elder-button--icon-only": !this.label,
-          "elder-button--icon": this.icon && this.label,
-          "elder-button--icon-left": this.icon && this.iconPlacement === "left",
-          "elder-button--icon-right":
-            (this.icon && this.iconPlacement === "right") ||
-            this.state === "confirm"
-        }
-      ];
-    }
+          'elder-button--loading': this.isLoading,
+          'elder-button--busy': this.isBusy,
+          'elder-button--icon-only': !this.label,
+          'elder-button--icon': this.icon && this.label,
+          'elder-button--icon-left': this.icon && this.iconPlacement === 'left',
+          'elder-button--icon-right': (this.icon && this.iconPlacement === 'right') || this.state === 'confirm',
+        },
+      ]
+    },
   },
   methods: {
     hookPromise(promise) {
-      if (!promise) return;
-      this.resetState();
-      this.innerPromise = promise;
+      if (!promise) return
+      this.resetState()
+      this.innerPromise = promise
 
-      this.loadingTreshhold = setTimeout(() => (this.state = "loading"), 100);
+      this.loadingTreshhold = setTimeout(() => (this.state = 'loading'), 100)
 
-      let capitalize = val => val.charAt(0).toUpperCase() + val.substring(1);
+      let capitalize = val => val.charAt(0).toUpperCase() + val.substring(1)
       let initStateTimeout = state => {
-        this.resetState();
+        this.resetState()
         if (this.stateTimeout) {
-          this.state = state;
+          this.state = state
           this.stateTimer = setTimeout(() => {
-            this.resetState();
-            this.$emit("on" + capitalize(state));
-          }, this.stateTimeout);
-        } else this.$emit("on" + capitalize(state));
-      };
+            this.resetState()
+            this.$emit('on' + capitalize(state))
+          }, this.stateTimeout)
+        } else this.$emit('on' + capitalize(state))
+      }
 
-      this.innerPromise
-        .then(() => initStateTimeout("success"))
-        .catch(() => initStateTimeout("error"));
+      this.innerPromise.then(() => initStateTimeout('success')).catch(() => initStateTimeout('error'))
     },
     resetState() {
-      if (this.loadingTreshhold) clearTimeout(this.loadingTreshhold);
-      if (this.stateTimer) clearTimeout(this.stateTimer);
-      this.innerPromise = null;
-      this.state = null;
+      if (this.loadingTreshhold) clearTimeout(this.loadingTreshhold)
+      if (this.stateTimer) clearTimeout(this.stateTimer)
+      this.innerPromise = null
+      this.state = null
     },
     onClick(event) {
-      if (this.confirm && this.state !== "confirm") {
-        this.clickAway = clickAway.bind(this);
-        window.addEventListener("click", this.clickAway);
-        return (this.state = "confirm");
+      if (this.confirm && this.state !== 'confirm') {
+        this.clickAway = clickAway.bind(this)
+        window.addEventListener('click', this.clickAway)
+        return (this.state = 'confirm')
       }
       if (this.clickAway) {
-        window.removeEventListener("click", this.clickAway);
-        this.clickAway = null;
+        window.removeEventListener('click', this.clickAway)
+        this.clickAway = null
       }
-      this.resetState();
-      this.$emit("click", event);
+      this.resetState()
+      this.$emit('click', event)
 
-      if (this.loadingOnClick) this.state = "loading";
-    }
+      if (this.loadingOnClick) this.state = 'loading'
+    },
   },
   created() {
     this.$watch(
       function() {
-        return this.promise;
+        return this.promise
       },
       function(newValue, oldValue) {
-        if (newValue instanceof Promise) this.hookPromise(newValue);
-      }
-    );
+        if (newValue instanceof Promise) this.hookPromise(newValue)
+      },
+    )
   },
   components: {
-    FontAwesomeIcon
-  }
-};
+    FontAwesomeIcon,
+  },
+}
 </script>
 
 <style lang="scss">
 .elder-button {
-  @import "./variables";
+  @import './variables';
 
   $py: 0.75em;
   $px: 1.5em;
@@ -255,7 +237,7 @@ export default {
     overflow: hidden;
 
     &:after {
-      content: "";
+      content: '';
       display: inline-block;
       width: 25%;
       height: 5px;
@@ -344,5 +326,3 @@ export default {
   }
 }
 </style>
-
-
