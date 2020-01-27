@@ -95,7 +95,7 @@ export default {
     },
     buttonType() {
       if (this.confirm && this.state !== 'confirm') return 'button'
-      return this.type
+      return this.$attrs.type
     },
     onState() {
       return this.state || this.isLoading
