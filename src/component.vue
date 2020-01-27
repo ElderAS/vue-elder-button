@@ -259,6 +259,7 @@ export default {
 
   &__label {
     padding: $py $px $py $px;
+    flex-grow: 1;
 
     .elder-button--icon-right & {
       padding: $py $px/2 $py $px;
