@@ -1,32 +1,33 @@
-import ButtonComponent from "./src/component.vue";
+import ButtonComponent from './src/component.vue'
 
 const install = Vue => {
-  Vue.component("button-component", ButtonComponent);
-};
+  Vue.component('button-component', ButtonComponent)
+}
 
 const Options = {
   icons: {
-    success: "check",
-    confirm: "exclamation-triangle",
-    error: "times"
+    success: 'check',
+    confirm: 'exclamation-triangle',
+    error: 'times',
   },
+  type: 'submit',
   labels: {
-    loading: "Loading...",
-    success: "Completed",
-    confirm: "Are you sure?",
-    error: "Something went wrong"
-  }
-};
+    loading: 'Loading...',
+    success: 'Completed',
+    confirm: 'Are you sure?',
+    error: 'Something went wrong',
+  },
+}
 
 const setup = options => {
   for (let key in options) {
-    if (!(key in Options)) return;
-    Options[key] = options[key];
+    if (!(key in Options)) return
+    Options[key] = options[key]
   }
-};
+}
 
 export default {
-  install
-};
+  install,
+}
 
-export { ButtonComponent, install as ButtonComponentInstaller, setup, Options };
+export { ButtonComponent, install as ButtonComponentInstaller, setup, Options }

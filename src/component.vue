@@ -1,27 +1,30 @@
 <template lang="html">
   <component
     :is="tag"
-    :type="buttonType"
-    class="elder-button"
-    :class="classNames"
+    v-bind="{
+      ...$attrs,
+      disabled,
+      type,
+      class: classNames,
+    }"
     @click.native="onClick"
-    :disabled="isDisabled"
-    v-bind="$attrs"
   >
-    <div v-if="labelComp" class="elder-button__label">
-      {{ labelComp }}
-    </div>
-    <div v-if="iconComp" class="elder-button__icon">
-      <font-awesome-icon v-bind="iconComp" />
-    </div>
+    <slot>
+      <div v-if="labelComp" class="elder-button__label">
+        {{ labelComp }}
+      </div>
+      <div v-if="iconComp" class="elder-button__icon">
+        <font-awesome-icon v-bind="iconComp" />
+      </div>
+    </slot>
   </component>
 </template>
 
 <script>
 import { Options } from '../index'
-import { iconBinding } from './utils'
-import './icons'
+import { iconBinding, Capitalize } from './utils'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import './icons'
 
 function clickAway(event) {
   if (!this.$el.contains(event.target)) this.resetState()
@@ -53,7 +56,6 @@ export default {
       default: 'right',
       enum: ['left', 'right'],
     },
-    disabled: Boolean,
     loading: Boolean,
     loadingOnClick: Boolean,
     promise: Promise,
@@ -87,15 +89,15 @@ export default {
       if (this.isLoading) return
       return iconBinding(this.onState ? this.icons[this.state] || Options.icons[this.state] : this.icon)
     },
-    isDisabled() {
-      return this.disabled || this.isLoading
+    disabled() {
+      return this.isLoading || this.$attrs.disabled
     },
     isLoading() {
       return this.state === 'loading' || this.loading
     },
-    buttonType() {
+    type() {
       if (this.confirm && this.state !== 'confirm') return 'button'
-      return this.$attrs.type
+      return this.$attrs.type || Options.type
     },
     onState() {
       return this.state || this.isLoading
@@ -105,6 +107,7 @@ export default {
     },
     classNames() {
       return [
+        'elder-button',
         'elder-button--' + this.themeComp,
         {
           'elder-button--loading': this.isLoading,
@@ -125,16 +128,15 @@ export default {
 
       this.loadingTreshhold = setTimeout(() => (this.state = 'loading'), 100)
 
-      let capitalize = val => val.charAt(0).toUpperCase() + val.substring(1)
       let initStateTimeout = state => {
         this.resetState()
         if (this.stateTimeout) {
           this.state = state
           this.stateTimer = setTimeout(() => {
             this.resetState()
-            this.$emit('on' + capitalize(state))
+            this.$emit('on' + Capitalize(state))
           }, this.stateTimeout)
-        } else this.$emit('on' + capitalize(state))
+        } else this.$emit('on' + Capitalize(state))
       }
 
       this.innerPromise.then(() => initStateTimeout('success')).catch(() => initStateTimeout('error'))
@@ -166,8 +168,8 @@ export default {
       function() {
         return this.promise
       },
-      function(newValue, oldValue) {
-        if (newValue instanceof Promise) this.hookPromise(newValue)
+      function(value) {
+        if (value instanceof Promise) this.hookPromise(value)
       },
     )
   },
