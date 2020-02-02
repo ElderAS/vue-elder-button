@@ -112,10 +112,10 @@ export default {
         {
           'elder-button--loading': this.isLoading,
           'elder-button--busy': this.isBusy,
-          'elder-button--icon-only': !this.label,
-          'elder-button--icon': this.icon && this.label,
-          'elder-button--icon-left': this.icon && this.iconPlacement === 'left',
-          'elder-button--icon-right': (this.icon && this.iconPlacement === 'right') || this.state === 'confirm',
+          'elder-button--icon-only': this.iconComp && !this.label,
+          'elder-button--icon': this.iconComp && this.label,
+          'elder-button--icon-left': this.iconComp && this.iconPlacement === 'left',
+          'elder-button--icon-right': (this.iconComp && this.iconPlacement === 'right') || this.state === 'confirm',
         },
       ]
     },
