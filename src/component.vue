@@ -7,7 +7,7 @@
       type,
       class: classNames,
     }"
-    @click.native="onClick"
+    @click="onClick"
   >
     <slot>
       <div v-if="labelComp" class="elder-button__label">
