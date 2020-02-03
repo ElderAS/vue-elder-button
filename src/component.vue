@@ -195,6 +195,7 @@ export default {
   cursor: pointer;
 
   font: inherit;
+  color: inherit;
   border: 1px solid rgba(black, 0.1);
   outline: none;
 
