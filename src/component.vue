@@ -278,7 +278,7 @@ export default {
 
     &:first-child:last-child {
       border-radius: $border-radius 0 0 $border-radius;
-      padding: 0 $px;
+      padding: $py $px;
     }
 
     .elder-button--icon-right & {
