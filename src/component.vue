@@ -7,7 +7,6 @@
       type,
       class: classNames,
     }"
-    @click="onClick"
   >
     <slot>
       <span v-if="labelComp" class="elder-button__label">
@@ -72,6 +71,7 @@ export default {
       stateTimer: null,
       loadingTreshhold: null,
       clickAway: null,
+      clickBinding: null,
     }
   },
   computed: {
@@ -173,6 +173,13 @@ export default {
         if (value instanceof Promise) this.hookPromise(value)
       },
     )
+    this.clickBinding = this.onClick.bind(this)
+  },
+  mounted() {
+    this.$el.addEventListener('click', this.clickBinding)
+  },
+  beforeDestroy() {
+    this.$el.removeEventListener('click', this.clickBinding)
   },
   components: {
     FontAwesomeIcon,
