@@ -1,6 +1,6 @@
 import ButtonComponent from './src/component.vue'
 
-const install = Vue => {
+const install = (Vue) => {
   Vue.component('button-component', ButtonComponent)
 }
 
@@ -17,9 +17,10 @@ const Options = {
     confirm: 'Are you sure?',
     error: 'Something went wrong',
   },
+  loadingOnClick: false,
 }
 
-const setup = options => {
+const setup = (options) => {
   for (let key in options) {
     if (!(key in Options)) return
     Options[key] = options[key]

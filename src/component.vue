@@ -56,7 +56,7 @@ export default {
       enum: ['left', 'right'],
     },
     loading: Boolean,
-    loadingOnClick: Boolean,
+    loadingOnClick: [Boolean, Function],
     promise: Promise,
     stateTimeout: {
       type: Number,
@@ -148,7 +148,6 @@ export default {
       this.state = null
     },
     onClick(event) {
-      debugger
       if (this.confirm && this.state !== 'confirm') {
         this.clickAway = clickAway.bind(this)
         window.addEventListener('click', this.clickAway)
@@ -161,7 +160,15 @@ export default {
       this.resetState()
       this.$emit('click', event)
 
-      if (this.loadingOnClick) this.state = 'loading'
+      let loadingOnClick = 'loadingOnClick' in this.$options.propsData ? this.loadingOnClick : Options.loadingOnClick
+      if (loadingOnClick) {
+        if (
+          (typeof loadingOnClick === 'function' && loadingOnClick.apply(this)) ||
+          (typeof loadingOnClick !== 'function' && loadingOnClick)
+        ) {
+          this.state = 'loading'
+        }
+      }
     },
   },
   created() {
