@@ -83,7 +83,7 @@ export default {
     labelComp() {
       if (!this.onState) return this.label
       if (this.isLoading) return this.labels.loading || this.$attrs.loadingLabel || Options.labels.loading
-      return this.labels[this.state] || this.$attrs[this.state + 'Label'] || Options.labels[this.state]
+      return this.$attrs[this.state + '-label'] || this.labels[this.state] || Options.labels[this.state]
     },
     iconComp() {
       if (this.isLoading) return
