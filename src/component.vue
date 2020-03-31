@@ -10,12 +10,12 @@
     @click="onClick"
   >
     <slot>
-      <div v-if="labelComp" class="elder-button__label">
+      <span v-if="labelComp" class="elder-button__label">
         {{ labelComp }}
-      </div>
-      <div v-if="iconComp" class="elder-button__icon">
+      </span>
+      <span v-if="iconComp" class="elder-button__icon">
         <font-awesome-icon v-bind="iconComp" />
-      </div>
+      </span>
     </slot>
   </component>
 </template>
@@ -128,7 +128,7 @@ export default {
 
       this.loadingTreshhold = setTimeout(() => (this.state = 'loading'), 100)
 
-      let initStateTimeout = state => {
+      let initStateTimeout = (state) => {
         this.resetState()
         if (this.stateTimeout) {
           this.state = state
@@ -148,6 +148,7 @@ export default {
       this.state = null
     },
     onClick(event) {
+      debugger
       if (this.confirm && this.state !== 'confirm') {
         this.clickAway = clickAway.bind(this)
         window.addEventListener('click', this.clickAway)
@@ -165,10 +166,10 @@ export default {
   },
   created() {
     this.$watch(
-      function() {
+      function () {
         return this.promise
       },
-      function(value) {
+      function (value) {
         if (value instanceof Promise) this.hookPromise(value)
       },
     )
