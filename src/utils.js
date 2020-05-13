@@ -8,4 +8,8 @@ function Capitalize(value) {
   return value.charAt(0).toUpperCase() + value.substring(1)
 }
 
-export { iconBinding, Capitalize }
+function isPromise(val) {
+  return typeof val === 'function' && 'then' in val && 'catch' in val
+}
+
+export { iconBinding, Capitalize, isPromise }

@@ -21,7 +21,7 @@
 
 <script>
 import { Options } from '../index'
-import { iconBinding, Capitalize } from './utils'
+import { iconBinding, Capitalize, isPromise } from './utils'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import './icons'
 
@@ -177,7 +177,7 @@ export default {
         return this.promise
       },
       function (value) {
-        if (value instanceof Promise) this.hookPromise(value)
+        if (isPromise(value)) this.hookPromise(value)
       },
     )
     this.clickBinding = this.onClick.bind(this)
