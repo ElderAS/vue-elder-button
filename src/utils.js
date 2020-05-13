@@ -9,7 +9,7 @@ function Capitalize(value) {
 }
 
 function isPromise(val) {
-  return typeof val === 'function' && 'then' in val && 'catch' in val
+  return typeof val.then === 'function' && typeof val.catch === 'function'
 }
 
 export { iconBinding, Capitalize, isPromise }
