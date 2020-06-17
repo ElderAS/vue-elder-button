@@ -195,12 +195,18 @@ export default {
 </script>
 
 <style lang="scss">
+@import './main';
+
+:root {
+  @include GenerateVariables();
+
+  @include GenerateVariable('button-padding-y', 0.75em);
+  @include GenerateVariable('button-padding-x', 1.5em);
+  @include GenerateVariable('button-disabled', #ccc);
+  @include GenerateVariable('button-disabled-contrast', darken(#ccc, 35%));
+}
+
 .elder-button {
-  @import './variables';
-
-  $py: 0.75em;
-  $px: 1.5em;
-
   display: inline-flex;
   justify-content: center;
   align-items: center;
@@ -210,19 +216,18 @@ export default {
   cursor: pointer;
 
   font: inherit;
-  color: inherit;
-  border: 1px solid rgba(black, 0.1);
+  border: 1px solid;
   outline: none;
 
-  border-radius: $border-radius;
+  border-radius: GetVariable('border-radius');
 
   white-space: nowrap;
 
   transition: color 0.2s ease-out, background-color 0.2s ease-out;
 
   &:disabled {
-    background-color: #ccc !important;
-    color: darken(#ccc, 35%);
+    background-color: GetVariable('button-disabled') !important;
+    color: GetVariable('button-disabled-contrast');
     pointer-events: none;
   }
 
@@ -241,7 +246,7 @@ export default {
       flex-direction: row-reverse;
 
       .elder-button__icon {
-        border-radius: $border-radius 0 0 $border-radius;
+        border-radius: GetVariable('border-radius') 0 0 GetVariable('border-radius');
       }
     }
   }
@@ -276,69 +281,66 @@ export default {
   }
 
   &__label {
-    padding: $py $px $py $px;
+    padding: GetVariable('button-padding-y') GetVariable('button-padding-x');
     flex-grow: 1;
 
     .elder-button--icon-right & {
-      padding: $py $px/2 $py $px;
+      padding: GetVariable('button-padding-y') calc(#{GetVariable('button-padding-x')} / 2)
+        GetVariable('button-padding-y') GetVariable('button-padding-x');
     }
 
     .elder-button--icon-left & {
-      padding: $py $px $py $px/2;
+      padding: GetVariable('button-padding-y') GetVariable('button-padding-x') GetVariable('button-padding-y')
+        calc(#{GetVariable('button-padding-x')} / 2);
     }
   }
 
   &__icon {
-    border-radius: 0 $border-radius $border-radius 0;
+    border-radius: 0 GetVariable('border-radius') GetVariable('border-radius') 0;
 
     &:first-child:last-child {
-      border-radius: $border-radius 0 0 $border-radius;
-      padding: $py $px;
+      border-radius: GetVariable('border-radius') 0 0 GetVariable('border-radius');
+      padding: GetVariable('button-padding-y') GetVariable('button-padding-x');
     }
 
     .elder-button--icon-right & {
-      padding: $py $px $py 0;
+      padding: GetVariable('button-padding-y') GetVariable('button-padding-x') GetVariable('button-padding-y') 0;
     }
 
     .elder-button--icon-left & {
-      padding: $py 0 $py $px;
+      padding: GetVariable('button-padding-y') 0 GetVariable('button-padding-y') GetVariable('button-padding-x');
     }
   }
 
   @each $state in $states {
     &--#{nth($state,1)} {
-      $state-adjust: -15deg;
+      $name: nth($state, 1);
 
-      background-color: nth($state, 2);
-      color: nth($state, 3);
+      background-color: GetVariable('#{$name}');
+      color: GetVariable('#{$name}-contrast');
 
-      border-color: transparent !important;
+      border-color: GetVariable('#{$name}-border');
 
       &:hover {
-        $hover-color: adjust-hue(nth($state, 2), $state-adjust);
-        background-color: $hover-color;
-        color: guess-color($hover-color);
+        background-color: GetVariable('#{$name}-hover');
       }
 
       &:focus {
-        $focus-color: adjust-hue(nth($state, 2), $state-adjust - 7deg);
-        background-color: $focus-color;
-        color: guess-color($focus-color);
+        background-color: GetVariable('#{$name}-focus');
       }
 
       &:active {
-        $active-color: adjust-hue(nth($state, 2), $state-adjust - 5deg);
-        background-color: $active-color;
-        color: guess-color($active-color);
+        background-color: GetVariable('#{$name}-active');
       }
 
       &--inverted {
-        background-color: nth($state, 3);
-        color: nth($state, 2);
-        border-color: nth($state, 2);
+        background-color: GetVariable('#{$name}-contrast');
+        color: GetVariable('#{$name}');
+        border-color: GetVariable('#{$name}');
 
         &:hover {
-          color: darken(nth($state, 2), 20%);
+          color: GetVariable('#{$name}-hover');
+          border-color: GetVariable('#{$name}-hover');
         }
       }
     }
