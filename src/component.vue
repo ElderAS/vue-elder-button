@@ -237,6 +237,7 @@ $variables: (
 
   border-width: 1px;
   border-style: solid;
+  border-color: transparent;
   border-radius: GetVariable('border-radius');
   outline: none;
 
