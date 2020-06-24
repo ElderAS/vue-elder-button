@@ -195,14 +195,27 @@ export default {
 </script>
 
 <style lang="scss">
-@import './main';
+$states: ('default', 'primary', 'secondary', 'warning', 'success', 'error');
 
-:root {
-  @include GenerateVariables();
-  @include GenerateVariable('button-padding-y', 0.75em);
-  @include GenerateVariable('button-padding-x', 1.5em);
-  @include GenerateVariable('button-disabled', #ccc);
-  @include GenerateVariable('button-disabled-contrast', darken(#ccc, 35%));
+$variables: (
+  'primary': #3a9acd,
+  'primary-contrast': white,
+  'secondary': #ff773f,
+  'secondary-contrast': white,
+  'warning': #ff773f,
+  'warning-contrast': white,
+  'success': #33ca62,
+  'success-contrast': white,
+  'error': #e83b35,
+  'error-contrast': #e83b35,
+  'button-padding-y': 0.75em,
+  'button-padding-x': 1.5em,
+  'button-disabled': #ccc,
+  'button-disabled-contrast': darken(#ccc, 35%),
+);
+
+@function GetVariable($key) {
+  @return var(--vue-elder-#{$key}, map-get($variables, $key));
 }
 
 .elder-button {
