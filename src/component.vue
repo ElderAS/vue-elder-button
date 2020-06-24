@@ -202,14 +202,19 @@ $variables: (
   'default-contrast': currentColor,
   'default-border': rgba(0, 0, 0, 0.1),
   'primary': #3a9acd,
+  'primary-border': GetVariable('primary'),
   'primary-contrast': white,
   'secondary': #ff773f,
+  'secondary-border': GetVariable('secondary'),
   'secondary-contrast': white,
   'warning': #ff773f,
+  'warning-border': GetVariable('warning'),
   'warning-contrast': white,
   'success': #33ca62,
+  'success-border': GetVariable('success'),
   'success-contrast': white,
   'error': #e83b35,
+  'error-border': GetVariable('error'),
   'error-contrast': white,
   'border-radius': 3px,
   'button-padding-y': 0.75em,
@@ -245,7 +250,8 @@ $variables: (
     pointer-events: none;
 
     color: GetVariable('button-disabled-contrast');
-    background-color: GetVariable('button-disabled') !important;
+    border-color: GetVariable('button-disabled');
+    background-color: GetVariable('button-disabled');
   }
 
   &:hover {
