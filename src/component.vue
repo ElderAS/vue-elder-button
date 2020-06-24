@@ -367,17 +367,15 @@ $variables: (
   }
 
   @each $state in $states {
-    &--#{nth($state,1)} {
-      $name: nth($state, 1);
-
-      color: GetVariable('#{$name}-contrast');
-      border-color: GetVariable('#{$name}-border');
-      background-color: GetVariable('#{$name}');
+    &--#{$state} {
+      color: GetVariable('#{$state}-contrast');
+      border-color: GetVariable('#{$state}-border');
+      background-color: GetVariable('#{$state}');
 
       &--inverted {
-        color: GetVariable('#{$name}');
-        border-color: GetVariable('#{$name}');
-        background-color: GetVariable('#{$name}-contrast');
+        color: GetVariable('#{$state}');
+        border-color: GetVariable('#{$state}');
+        background-color: GetVariable('#{$state}-contrast');
       }
     }
   }
