@@ -199,7 +199,6 @@ export default {
 
 :root {
   @include GenerateVariables();
-
   @include GenerateVariable('button-padding-y', 0.75em);
   @include GenerateVariable('button-padding-x', 1.5em);
   @include GenerateVariable('button-disabled', #ccc);
@@ -207,39 +206,61 @@ export default {
 }
 
 .elder-button {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  text-decoration: none;
+  font: inherit;
 
   position: relative;
-  cursor: pointer;
 
-  font: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  white-space: nowrap;
+  text-decoration: none;
+
   border: 1px solid;
+  border-radius: GetVariable('border-radius');
   outline: none;
 
-  border-radius: GetVariable('border-radius');
-
-  white-space: nowrap;
-
-  transition: color 0.2s ease-out, background-color 0.2s ease-out;
-
   &:disabled {
-    background-color: GetVariable('button-disabled') !important;
-    color: GetVariable('button-disabled-contrast');
     pointer-events: none;
+
+    color: GetVariable('button-disabled-contrast');
+    background-color: GetVariable('button-disabled') !important;
   }
 
   &:hover {
-    background-color: rgba(black, 0.2);
+    &:before {
+      opacity: 0.1;
+    }
   }
 
   &:focus {
-    background-color: rgba(black, 0.1);
+    &:before {
+      opacity: 0.2;
+    }
+  }
+
+  &:before {
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    content: '';
+    transition: opacity 0.2s;
+
+    opacity: 0;
+    border-radius: inherit;
+    background: black;
   }
 
   &--icon {
+    z-index: 1;
+
     justify-content: space-between;
 
     &-left {
@@ -256,21 +277,25 @@ export default {
   }
 
   &--loading {
-    cursor: wait;
     overflow: hidden;
 
+    cursor: wait;
+
     &:after {
-      content: '';
+      position: absolute;
+      bottom: 0;
+      left: -20%;
+
       display: inline-block;
+
       width: 25%;
       height: 5px;
-      position: absolute;
-      border-radius: 5px;
-      left: -20%;
-      bottom: 0;
-      background: rgba(255, 255, 255, 0.5);
 
+      content: '';
       animation: loader 1s infinite linear;
+
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.5);
 
       @keyframes loader {
         to {
@@ -281,8 +306,11 @@ export default {
   }
 
   &__label {
-    padding: GetVariable('button-padding-y') GetVariable('button-padding-x');
+    z-index: 1;
+
     flex-grow: 1;
+
+    padding: GetVariable('button-padding-y') GetVariable('button-padding-x');
 
     .elder-button--icon-right & {
       padding: GetVariable('button-padding-y') calc(#{GetVariable('button-padding-x')} / 2)
@@ -299,8 +327,9 @@ export default {
     border-radius: 0 GetVariable('border-radius') GetVariable('border-radius') 0;
 
     &:first-child:last-child {
-      border-radius: GetVariable('border-radius') 0 0 GetVariable('border-radius');
       padding: GetVariable('button-padding-y') GetVariable('button-padding-x');
+
+      border-radius: GetVariable('border-radius') 0 0 GetVariable('border-radius');
     }
 
     .elder-button--icon-right & {
@@ -316,32 +345,14 @@ export default {
     &--#{nth($state,1)} {
       $name: nth($state, 1);
 
-      background-color: GetVariable('#{$name}');
       color: GetVariable('#{$name}-contrast');
-
       border-color: GetVariable('#{$name}-border');
-
-      &:hover {
-        background-color: GetVariable('#{$name}-hover');
-      }
-
-      &:focus {
-        background-color: GetVariable('#{$name}-focus');
-      }
-
-      &:active {
-        background-color: GetVariable('#{$name}-active');
-      }
+      background-color: GetVariable('#{$name}');
 
       &--inverted {
-        background-color: GetVariable('#{$name}-contrast');
         color: GetVariable('#{$name}');
         border-color: GetVariable('#{$name}');
-
-        &:hover {
-          color: GetVariable('#{$name}-hover');
-          border-color: GetVariable('#{$name}-hover');
-        }
+        background-color: GetVariable('#{$name}-contrast');
       }
     }
   }
