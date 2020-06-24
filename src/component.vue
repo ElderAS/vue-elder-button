@@ -198,6 +198,9 @@ export default {
 $states: ('default', 'primary', 'secondary', 'warning', 'success', 'error');
 
 $variables: (
+  'default': transparent,
+  'default-contrast': currentColor,
+  'default-border': rgba(0, 0, 0, 0.1),
   'primary': #3a9acd,
   'primary-contrast': white,
   'secondary': #ff773f,
@@ -232,7 +235,8 @@ $variables: (
   white-space: nowrap;
   text-decoration: none;
 
-  border: 1px solid;
+  border-width: 1px;
+  border-style: solid;
   border-radius: GetVariable('border-radius');
   outline: none;
 
