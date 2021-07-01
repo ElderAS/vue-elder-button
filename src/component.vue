@@ -9,11 +9,15 @@
     }"
   >
     <slot>
-      <span v-if="labelComp" class="elder-button__label">
-        {{ labelComp }}
+      <span v-if="labelComp || $scopedSlots.label" class="elder-button__label">
+        <slot name="label">
+          {{ labelComp }}
+        </slot>
       </span>
-      <span v-if="iconComp" class="elder-button__icon">
-        <font-awesome-icon v-bind="iconComp" />
+      <span v-if="iconComp || $scopedSlots.icon" class="elder-button__icon">
+        <slot name="icon">
+          <font-awesome-icon v-bind="iconComp" />
+        </slot>
       </span>
     </slot>
   </component>
@@ -112,10 +116,11 @@ export default {
         {
           'elder-button--loading': this.isLoading,
           'elder-button--busy': this.isBusy,
-          'elder-button--icon-only': this.iconComp && !this.label,
-          'elder-button--icon': this.iconComp && this.label,
-          'elder-button--icon-left': this.iconComp && this.iconPlacement === 'left',
-          'elder-button--icon-right': (this.iconComp && this.iconPlacement === 'right') || this.state === 'confirm',
+          'elder-button--icon-only': this.iconComp && !this.label && !this.$scopedSlots.label,
+          'elder-button--icon': (this.iconComp || this.$scopedSlots.icon) && this.label,
+          'elder-button--icon-left': (this.iconComp || this.$scopedSlots.icon) && this.iconPlacement === 'left',
+          'elder-button--icon-right':
+            ((this.iconComp || this.$scopedSlots.icon) && this.iconPlacement === 'right') || this.state === 'confirm',
         },
       ]
     },
