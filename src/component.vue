@@ -251,7 +251,8 @@ $variables: (
   border-radius: GetVariable('border-radius');
   outline: none;
 
-  &:disabled {
+  &:disabled,
+  &[disabled='disabled'] {
     pointer-events: none;
 
     color: GetVariable('button-disabled-contrast');
