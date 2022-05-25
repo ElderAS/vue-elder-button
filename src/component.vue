@@ -15,7 +15,7 @@
         </slot>
       </span>
       <span v-if="iconComp || $scopedSlots.icon" class="elder-button__icon">
-        <slot name="icon">
+        <slot name="icon" :icon="iconComp" :state="state">
           <font-awesome-icon v-bind="iconComp" />
         </slot>
       </span>
