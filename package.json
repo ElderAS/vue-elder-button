@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"No tests yet\"",
-    "travis-deploy-once": "travis-deploy-once",
-    "semantic-release": "semantic-release"
+    "semantic-release": "dotenv semantic-release"
   },
   "repository": {
     "type": "git",
@@ -29,9 +28,10 @@
     "@fortawesome/vue-fontawesome": "^0.1.9"
   },
   "devDependencies": {
-    "cz-conventional-changelog": "^2.1.0",
-    "semantic-release-cli": "^5.3.0",
-    "semantic-release": "^17.0.7"
+    "cz-conventional-changelog": "^3.3.0",
+    "dotenv-cli": "^4.0.0",
+    "semantic-release": "^17.3.0",
+    "semantic-release-cli": "^5.4.0"
   },
   "config": {
     "commitizen": {
