@@ -18,6 +18,7 @@ const Options = {
     error: 'Something went wrong',
   },
   loadingOnClick: false,
+  listeners: {},
 }
 
 const setup = (options) => {

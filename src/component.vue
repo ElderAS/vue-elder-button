@@ -29,6 +29,8 @@ import { iconBinding, Capitalize, isPromise } from './utils'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import './icons'
 
+const Listeners = {}
+
 function clickAway(event) {
   if (!this.$el.contains(event.target)) this.resetState()
 }
@@ -189,9 +191,19 @@ export default {
   },
   mounted() {
     this.$el.addEventListener('click', this.clickBinding)
+
+    if (Object.keys(Options.listeners)) {
+      Object.entries(Options.listeners).forEach(([event, callback]) => {
+        Listeners[event] = callback.bind(this, this.$el)
+        this.$el.addEventListener(event, Listeners[event])
+      })
+    }
   },
   beforeDestroy() {
     this.$el.removeEventListener('click', this.clickBinding)
+
+    if (Object.keys(Listeners))
+      Object.entries(Listeners).forEach(([event, callback]) => this.$el.removeEventListener(event, callback))
   },
   components: {
     FontAwesomeIcon,
