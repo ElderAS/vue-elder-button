@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <component
     :is="tag"
     v-bind="{
@@ -25,7 +25,7 @@
 
 <script>
 import { Options } from '../index'
-import Icon from '@kvass/vue2-icon/src/Legacy'
+import Icon from '@kvass/vue2-icon'
 import { iconBinding, Capitalize, isPromise } from './utils'
 
 function clickAway(event) {

@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/ElderAS/vue-elder-button#readme",
   "dependencies": {
-    "@kvass/vue2-icon": "^1.0.2"
+    "@kvass/vue2-icon": "^1.0.3"
   },
   "devDependencies": {
     "cz-conventional-changelog": "^2.1.0",
