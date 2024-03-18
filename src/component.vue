@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <component
     :is="tag"
     v-bind="{
@@ -16,7 +16,7 @@
       </span>
       <span v-if="iconComp || $scopedSlots.icon" class="elder-button__icon">
         <slot name="icon" :icon="iconComp" :state="state">
-          <font-awesome-icon v-bind="iconComp" />
+          <Icon v-bind="iconComp" />
         </slot>
       </span>
     </slot>
@@ -25,9 +25,8 @@
 
 <script>
 import { Options } from '../index'
+import Icon from '@kvass/vue2-icon'
 import { iconBinding, Capitalize, isPromise } from './utils'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import './icons'
 
 const Listeners = {}
 
@@ -206,7 +205,7 @@ export default {
       Object.entries(Listeners).forEach(([event, callback]) => this.$el.removeEventListener(event, callback))
   },
   components: {
-    FontAwesomeIcon,
+    Icon,
   },
 }
 </script>
